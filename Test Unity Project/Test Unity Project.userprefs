@@ -1,0 +1,18 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MyScripts\Character\playerController.cs">
+    <Files>
+      <File FileName="Assets\Scripts\MyScripts\Character\ActorBehavior.cs" Line="29" Column="12" />
+      <File FileName="Assets\Scripts\MyScripts\Character\ActorData.cs" Line="23" Column="3" />
+      <File FileName="Assets\Scripts\MyScripts\Character\StatData.cs" Line="8" Column="22" />
+      <File FileName="Assets\Scripts\MyScripts\Character\playerController.cs" Line="96" Column="35" />
+      <File FileName="Assets\Scripts\MyScripts\Character\item.cs" Line="9" Column="27" />
+      <File FileName="Assets\Scripts\MyScripts\PerlinNoisePlane.cs" Line="31" Column="71" />
+      <File FileName="Assets\Scripts\MyScripts\GenPerlinTerrain.cs" Line="12" Column="2" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
