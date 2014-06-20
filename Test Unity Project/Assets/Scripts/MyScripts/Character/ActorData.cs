@@ -17,6 +17,7 @@ public class ActorData
 	public string name;
 	public float x,y;
 	
+	
 	public ActorData()
 	{
 		name = "Default Actor Name";

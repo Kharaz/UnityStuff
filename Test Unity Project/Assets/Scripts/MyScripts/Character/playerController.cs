@@ -11,31 +11,37 @@ public class playerController : MonoBehaviour
 	//---------------|
 	
 	//mouselook stuff
-	public Vector2 mouseAbs;
-	public Vector2 smoothMouse;
+	public enum RotationAxes {MouseXandY = 0, MouseX = 1, MouseY = 2}; 
+	public RotationAxes axes = RotationAxes.MouseXandY;
 	
-	public Vector2 sensitivity = new Vector2(2,2); 
-	public Vector2 smoothing = new Vector2(3,3);
+	public float sensitivity = 15f;
 	
-	public Vector2 clampDeg = new Vector2(360, 180);
-	public bool lockCursor;
+	public float minX = -360f;
+	public float maxX = 360f;
 	
-	public Vector2 targetDir;
-	//public Vector2 targetCharDir;
-	public GameObject charBody;
+	public float minY = -60f;
+	public float maxY = 60f;
+	
+	float rotationY;
+	//---------------|
+	
+	
+	//GUI stuff
+	public bool inventoryOn = false;
+	public bool statscreenOn = false;
 	//---------------|
 	
 	//component stuff
 	public ActorBehavior actorBehavior;
 	public CharacterController controller;
+	public GameObject camera;
 	//---------------|
 	
 	void Start ()
 	{
 		actorBehavior = GetComponent<ActorBehavior>();
 		controller = GetComponent<CharacterController>();
-		
-		targetDir = controller.transform.localRotation.eulerAngles;
+		camera = GameObject.Find ("Camera");
 		
 		if (actorBehavior != null) {
 			maxVel = actorBehavior.GetStat(ActorData.StatType.AGILITY);
@@ -56,6 +62,7 @@ public class playerController : MonoBehaviour
 	void UpdateMovement() {
 		float x = Input.GetAxis ("Horizontal");
 		float z = Input.GetAxis ("Vertical");
+		
 		Vector3 moveTo = new Vector3(x,0,z);
 		moveTo = transform.TransformDirection(moveTo);
 		moveTo *= maxVel;
@@ -76,33 +83,65 @@ public class playerController : MonoBehaviour
 	}
 
 	void UpdateMouseLook() {
-		Screen.lockCursor = lockCursor;
 		
-		var targetOrientation = Quaternion.Euler (targetDir);
-		
-		var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-		mouseDelta = Vector2.Scale(mouseDelta, new Vector2(sensitivity.x * smoothing.x, sensitivity.y*smoothing.y));
-		
-		smoothMouse.x = Mathf.Lerp(smoothMouse.x, mouseDelta.x, 1/smoothing.x);
-		smoothMouse.y = Mathf.Lerp(smoothMouse.y, mouseDelta.y, 1/smoothing.y);
-		
-		mouseAbs += smoothMouse;
-		
-		if(clampDeg.x < 360) {
-			mouseAbs.x = Mathf.Clamp(mouseAbs.x, -clampDeg.x * 0.5f, clampDeg.x * 0.5f);
+		if (inventoryOn){
+			Screen.lockCursor = false;
+			return;
+		} else {
+			Screen.lockCursor = true;
 		}
 		
-		 var xRot = Quaternion.AngleAxis(-mouseAbs.y, targetOrientation * Vector3.right);
-        transform.rotation = xRot;
-
+		float rotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * sensitivity;
 		
-		if(clampDeg.y < 360) {
-			mouseAbs.y = Mathf.Clamp(mouseAbs.y, -clampDeg.y * 0.5f, clampDeg.y * 0.5f);
+		rotationY += Input.GetAxis("Mouse Y") * sensitivity;
+		rotationY = Mathf.Clamp (rotationY, minY, maxY);
+			
+		if (axes == RotationAxes.MouseXandY){
+			transform.localEulerAngles = new Vector3(0, rotationX, 0);
+			camera.transform.localEulerAngles = new Vector3(-rotationY,0,0);	
 		}
+		else if(axes == RotationAxes.MouseX){
+			transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivity, 0);
+		}
+		else if(axes == RotationAxes.MouseY){
+			camera.transform.localEulerAngles = new Vector3(-rotationY, transform.localEulerAngles.y, 0);
+		}		
+	}
 	
-        var yRot = Quaternion.AngleAxis(mouseAbs.x, transform.InverseTransformDirection(Vector3.up));
-        transform.rotation *= targetOrientation;
-		transform.rotation *= yRot;
+	void UpdateKeyPress() {
+		if(Input.GetKeyDown(KeyCode.Tab)){
+				inventoryOn = !inventoryOn;
+				statscreenOn = !statscreenOn;	
+		}
+		
+		if(Input.GetKeyDown(KeyCode.E)){
+			Ray ray = camera.camera.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+			
+			if(Physics.Raycast (ray, out hit)){
+				Debug.Log(hit.transform.name);
+				Debug.DrawRay(camera.transform.position, ray.direction, Color.green);
+				
+				if(hit.transform.GetComponent<item>() != null){
+					actorBehavior.PickUpItem(hit.transform.gameObject.GetComponent<item>());
+				}
+
+				/*
+				if(hit.transform.GetComponent<item>() != null){
+					Debug.Log ("Is Item");
+				}
+				*/
+				
+			}
+		}
+		if(Input.GetMouseButtonDown(0) && !inventoryOn){
+			Debug.Log ("Pressed Mouse 0");
+			actorBehavior.inventory.Equipped[0].UseItem();
+		}
+		if(Input.GetMouseButtonDown(1) && !inventoryOn){
+			Debug.Log ("Pressed Mouse 1");
+			actorBehavior.inventory.Equipped[1].UseItem();
+		}
 	}
 	
 	void CheckForOutOfBounds() {
@@ -111,14 +150,13 @@ public class playerController : MonoBehaviour
 		}
 	}
 	
-	// Update is called once per frame
-	void Update ()
+	void Update()
 	{	
 		if(actorBehavior.IsAlive()){
 			UpdateMovement ();
-			Debug.Log (Input.GetAxisRaw("Mouse X"));
+			UpdateMouseLook ();
+			UpdateKeyPress ();
 		}
-		UpdateMouseLook ();
 		CheckForOutOfBounds();
 	}
 }

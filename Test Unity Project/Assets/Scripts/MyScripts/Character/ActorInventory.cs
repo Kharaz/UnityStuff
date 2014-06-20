@@ -2,39 +2,93 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class ActorInventory : MonoBehaviour
+public class ActorInventory
 {
-	
-	List<item> Contents;
+	public Dictionary<int, item> Contents = new Dictionary<int, item>();
+	public Dictionary<int, item> Equipped = new Dictionary<int, item>();
 	
 	public int maxItems = 10;
+	public int equipSlots = 4;
 	
-	// Use this for initialization
-	void Start ()
-	{
-		Contents = new List<item>();
-	
+	public int Count(){
+		return Contents.Count;
 	}
 	
-	void AddItem(item Item){
-	
-		if(Contents.Count >= maxItems){
-			Contents.Add(Item);
+	public item GetItemAt(int index){
+		if(Contents.ContainsKey(index)){
+			return Contents[index];
+		} else {
+			return null;
 		}
-		else{
+	}
+	
+	public void AddItem(item Item){
+		if(Contents.Count < maxItems){
+			for(int i = 0; i < maxItems; i++){
+				if (!Contents.ContainsKey(i)){
+					Contents.Add(i, Item);
+					return;
+				}
+			}
+		} else {
 			Debug.Log("Max Items Reached");
 		}
+		DebugPrintInventory();
 	}
 	
-	void RemoveItem(item Item){
-		Contents.Remove(Item);
+	public void RemoveItem(int index){
+		if(Contents.ContainsKey(index)){
+			Contents.Remove(index);
+			//Contents[index].SpawnItem();
+		} else {
+			Debug.Log ("Cannot find item at index " +index);
+		}
 	}
 	
+	public void EquipItem(item Item){
+		for(int i = 0; i < equipSlots; i++){
+			if(!Equipped.ContainsKey(i)) 
+			{
+				Equipped[i] = Item;
+				return;
+			}
+		}
+	}
 	
-	// Update is called once per frame
-	void Update ()
-	{
+	public void UnequipItem(int index){
+		if(Equipped[index] != null){
+			Equipped.Remove(index);
+		} else {
+		Debug.Log ("No item at index " + index);
+		}
+	}
 	
+	public item GetEquippedItem(int index){
+		if(Equipped.ContainsKey(index)) return Equipped[index];
+		return null;
+	}
+	
+	public bool CanEquipItem(){
+		if(Equipped.Count == equipSlots){
+			return false;
+		}
+		return true;
+	}
+	
+	public void DebugPrintInventory(){
+		string invString = "Inventory Contents: ";
+		string equipString = "Equipped items: ";
+		
+		foreach(KeyValuePair<int, item> item in Contents){
+			invString += item.Value.Name() + ", ";
+		}
+		
+		foreach (KeyValuePair<int, item> item in Equipped){
+			equipString += item.Value.Name () + ", ";
+		}
+		
+		Debug.Log (invString);
+		Debug.Log (equipString);
 	}
 }
 
