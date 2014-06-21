@@ -57,6 +57,7 @@
      <Compile Include="Assets\Scripts\MyScripts\Character\GuiController.cs" />
      <Compile Include="Assets\Scripts\MyScripts\Character\StatData.cs" />
      <Compile Include="Assets\Scripts\MyScripts\Character\playerController.cs" />
+     <Compile Include="Assets\Scripts\MyScripts\Firearm.cs" />
      <Compile Include="Assets\Scripts\MyScripts\Flashlight.cs" />
      <Compile Include="Assets\Scripts\MyScripts\GenPerlinTerrain.cs" />
      <Compile Include="Assets\Scripts\MyScripts\GenTerrain.cs" />

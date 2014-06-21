@@ -142,6 +142,14 @@ public class playerController : MonoBehaviour
 			Debug.Log ("Pressed Mouse 1");
 			actorBehavior.inventory.Equipped[1].UseItem();
 		}
+		/*
+		if(actorBehavior.inventory.Equipped[0].GetComponent<Firearm>()){
+			if(Input.GetKeyDown (KeyCode.R)){
+				actorBehavior.inventory.Equipped[0].re
+			}
+		}
+		*/
+		
 	}
 	
 	void CheckForOutOfBounds() {

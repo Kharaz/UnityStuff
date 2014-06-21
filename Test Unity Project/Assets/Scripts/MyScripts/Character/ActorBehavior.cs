@@ -7,10 +7,15 @@ public class ActorBehavior : MonoBehaviour {
 	
 	Transform cam;
 	
+	public Transform[] alignPoints = new Transform[2];
+	
+	
 	public void Start(){
-		cam = this.transform.GetChild(0);
-		Debug.Log (cam);
-		Debug.Log(cam.forward);
+		if(transform.name == "Character"){
+			cam = this.transform.GetChild(0);
+			Debug.Log (cam);
+			Debug.Log(cam.forward);
+		}
 	}
 	
 	public void Update()
@@ -18,9 +23,16 @@ public class ActorBehavior : MonoBehaviour {
 		if (Time.frameCount % 60 == 0) {
 			//Debug.Log ("Am I alive? " + data.IsAlive());
 			//Debug.Log (string.Format("I am at {0},{1}", data.x, data.y));
+			if(!IsAlive()){
+				Death();
+			}
 		}
 		
 		//this.transform.position = new Vector3(data.x, 0.0f, data.y);
+	}
+	
+	public void Death(){
+		Destroy(this.transform.gameObject);
 	}
 	
 	public bool IsAlive()
@@ -64,12 +76,17 @@ public class ActorBehavior : MonoBehaviour {
 							Debug.Log("Point"+slot);
 							
 						
-							
 							Transform attachPoint = trans;
 							Item.transform.position = attachPoint.position;
 							//Item.transform.rotation = Quaternion.LookRotation(trans.GetChild(0).transform.position - trans.position);
 							//Item.transform.rotation = attachPoint.rotation;
-							Item.transform.LookAt(trans.GetChild(0).transform.position);
+							
+							if(slot == 1 || slot == 2){
+								//Item.transform.LookAt(alignPoints[slot-1].transform.position);
+								Item.transform.rotation = cam.rotation;
+							} else {
+								Item.transform.LookAt(trans.GetChild(0).transform.position);
+							}
 					}
 				}
 					
@@ -85,6 +102,7 @@ public class ActorBehavior : MonoBehaviour {
 		//Item.transform.parent = GameObject.Find("Camera").transform;
 		
 		Item.gameObject.rigidbody.isKinematic = true;
+		Item.gameObject.collider.enabled = false;
 		//Destroy (Item.gameObject.rigidbody);
 		//todo: make this just disable the rigidbody
 		//todo: don't use gameobject.find, figure out how it selects which child is which
@@ -93,6 +111,7 @@ public class ActorBehavior : MonoBehaviour {
 	public void UnequipItem(item Item){
 		Item.transform.parent = null;
 		Item.gameObject.rigidbody.isKinematic = false;
+		Item.gameObject.collider.enabled = true;
 		Item.Despawn();
 	}
 	
@@ -101,5 +120,13 @@ public class ActorBehavior : MonoBehaviour {
 		thing.Respawn(this.transform.position + (cam.forward*2) + cam.up);
 		thing.transform.rotation = this.transform.rotation;
 		inventory.RemoveItem(index);
+	}
+	
+	public void TakeDamage(int damage){
+		Debug.Log ("taking damage");
+		if(this.transform.GetComponent<AudioSource>()){
+			audio.Play ();
+		}
+		data.health.current -= damage;
 	}
 }

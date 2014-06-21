@@ -91,8 +91,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f2659783b290584d876e78682dbfaf0, type: 3}
+  m_Script: {fileID: 11500000, guid: b2c7fe244a6de1542ab3ed5eaddf40bf, type: 3}
   m_Name: 
+  name: default item name
   equipped: 0
 --- !u!1001 &100100000
 Prefab:
