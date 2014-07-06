@@ -78,8 +78,6 @@ public class ActorBehavior : MonoBehaviour {
 						
 							Transform attachPoint = trans;
 							Item.transform.position = attachPoint.position;
-							//Item.transform.rotation = Quaternion.LookRotation(trans.GetChild(0).transform.position - trans.position);
-							//Item.transform.rotation = attachPoint.rotation;
 							
 							if(slot == 1 || slot == 2){
 								//Item.transform.LookAt(alignPoints[slot-1].transform.position);

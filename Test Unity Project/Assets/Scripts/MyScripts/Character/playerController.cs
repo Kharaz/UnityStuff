@@ -110,8 +110,10 @@ public class playerController : MonoBehaviour
 	
 	void UpdateKeyPress() {
 		if(Input.GetKeyDown(KeyCode.Tab)){
+				//inventoryOn = !inventoryOn;
+				//statscreenOn = !statscreenOn;	
 				inventoryOn = !inventoryOn;
-				statscreenOn = !statscreenOn;	
+				statscreenOn = inventoryOn;
 		}
 		
 		if(Input.GetKeyDown(KeyCode.E)){
@@ -125,6 +127,10 @@ public class playerController : MonoBehaviour
 				if(hit.transform.GetComponent<item>() != null){
 					actorBehavior.PickUpItem(hit.transform.gameObject.GetComponent<item>());
 				}
+				
+				if(hit.transform.GetComponent<Activator>() != null){
+					hit.transform.GetComponent<Activator>().Activate(this.gameObject);
+				}
 
 				/*
 				if(hit.transform.GetComponent<item>() != null){
@@ -134,21 +140,42 @@ public class playerController : MonoBehaviour
 				
 			}
 		}
-		if(Input.GetMouseButtonDown(0) && !inventoryOn){
+		
+		bool slot1 = actorBehavior.inventory.isEquipped(0);
+		bool slot2 = actorBehavior.inventory.isEquipped(1);
+		
+		//non-firearm stuff. don't like, not flexible, can i clean this up?
+		if(slot1 && Input.GetMouseButtonDown(0) && !inventoryOn && !actorBehavior.inventory.Equipped[0].GetComponent<Firearm>()){
 			Debug.Log ("Pressed Mouse 0");
 			actorBehavior.inventory.Equipped[0].UseItem();
 		}
-		if(Input.GetMouseButtonDown(1) && !inventoryOn){
+		if(slot2 && Input.GetMouseButtonDown(1) && !inventoryOn){
 			Debug.Log ("Pressed Mouse 1");
 			actorBehavior.inventory.Equipped[1].UseItem();
 		}
-		/*
-		if(actorBehavior.inventory.Equipped[0].GetComponent<Firearm>()){
+
+		
+		//firearm specific stuff, gross
+		if(slot1 && actorBehavior.inventory.Equipped[0].GetComponent<Firearm>() && !inventoryOn){
 			if(Input.GetKeyDown (KeyCode.R)){
-				actorBehavior.inventory.Equipped[0].re
+				actorBehavior.inventory.Equipped[0].SendMessage("Reload");
+			}
+			
+			if(Input.GetMouseButton(0)){
+				actorBehavior.inventory.Equipped[0].UseItem ();
 			}
 		}
-		*/
+		
+		if(slot2 && actorBehavior.inventory.Equipped[1].GetComponent<Firearm>() && !inventoryOn){
+			if(Input.GetKeyDown (KeyCode.R)){
+				actorBehavior.inventory.Equipped[1].SendMessage("Reload");
+			}
+			
+			if(Input.GetMouseButton(1)){
+				actorBehavior.inventory.Equipped[1].UseItem ();
+			}
+		}
+	
 		
 	}
 	

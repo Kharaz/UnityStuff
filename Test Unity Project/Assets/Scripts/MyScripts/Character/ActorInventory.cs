@@ -22,6 +22,14 @@ public class ActorInventory
 		}
 	}
 	
+	public bool isEquipped(int index){
+		if(Equipped.ContainsKey(index)){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public void AddItem(item Item){
 		if(Contents.Count < maxItems){
 			for(int i = 0; i < maxItems; i++){

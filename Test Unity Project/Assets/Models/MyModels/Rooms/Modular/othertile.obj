@@ -1,0 +1,11 @@
+# Blender v2.58 (sub 0) OBJ File: 'othertile.blend'
+# www.blender.org
+mtllib othertile.mtl
+o Cube
+v 1.000000 0.000000 -1.000000
+v 1.000000 0.000000 1.000000
+v -1.000000 0.000000 1.000000
+v -1.000000 0.000000 -1.000000
+usemtl Material
+s off
+f 1 4 3 2

@@ -18,6 +18,8 @@ public class GuiController : MonoBehaviour
 	public int Bottom;
 	public int VertQuarter;
 	
+	public bool inExtInv;
+	
 	//rect(left, top, width, height)
 	void Start ()
 	{
@@ -144,6 +146,26 @@ public class GuiController : MonoBehaviour
 		}
 	}
 	
+	
+	// todo: make generic "displayInventory" method that just draws an inventory
+	// regardless of whose it is since, like, they're kinda all the same
+	/*
+	public void displayExternalInventory(ActorInventory extInv)
+	{
+		int maxCounter = extInv.Contents.Count;
+		int counter = 0;
+		inExtInv = true;
+	
+		Rect inventoryBackground = new Rect(Left+HorizQuarter/4,Top+VertQuarter/4, 300, (maxCounter*20)+30);
+		GUI.Box(inventoryBackground, "Inventory");
+		
+		foreach(KeyValuePair<int, item> item in extInv.Contents){
+			Rect LabelBox = new Rect(inventoryBackground.x + 10, inventoryBackground.y + (counter*20) + 25, 100, 20);
+			GUI.Label(LabelBox, item.Value.Name());
+			counter++;
+		}	
+	}
+	*/
 
 	void Update ()
 	{

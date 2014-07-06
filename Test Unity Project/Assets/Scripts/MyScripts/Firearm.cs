@@ -9,6 +9,9 @@ public class Firearm : item {
 	public int currentAmmo;
 	public int maxAmmo;
 	
+	public bool isAuto = false;
+	bool hasShot = false;
+	
 	public int reloadTime;
 	float timeWaited;
 	bool reloading;
@@ -19,9 +22,20 @@ public class Firearm : item {
 	AudioClip bang; 
 	AudioClip click;
 	
-	public override void UseItem() {
-		audio.clip = null;
+	bool canShoot(){
+		if(isAuto && timeSinceLastShot > shotCooldown){
+			return true;
+		}
 		if(!reloading && currentAmmo > 0 && timeSinceLastShot > shotCooldown){
+			return true;
+		}
+		return false;
+	}
+	
+	public override void UseItem() {
+		//audio.clip = null;
+		if(!reloading && currentAmmo > 0 && timeSinceLastShot > shotCooldown && !hasShot){
+			hasShot = true;
 			audio.clip = bang;
 			timeSinceLastShot = 0;
 		
@@ -42,12 +56,14 @@ public class Firearm : item {
 				firePoint.GetComponent<LineRenderer>().SetPosition(0,firePoint.position);
 				Debug.Log(hit.transform.name);
 			}
+			
 			Debug.DrawRay(firePoint.position, this.transform.forward, Color.red, 0.25f);
+			audio.Play();
 		} else if (reloading || currentAmmo == 0) {
 			audio.clip = click;
-			Reload ();
+			//Reload ();
+			audio.Play();
 		}
-		audio.Play();
 	}
 	
 	public void Start(){
@@ -59,6 +75,14 @@ public class Firearm : item {
 	public void Update(){
 		timeSinceLastShot += Time.deltaTime;
 		timeSinceLastShot = Mathf.Clamp(timeSinceLastShot, 0, 40);
+		
+		if(timeSinceLastShot > shotCooldown && isAuto){
+			hasShot = false;
+		}
+		
+		if(!isAuto){
+			hasShot = Input.GetMouseButton(0);
+		}
 	
 		if(Time.frameCount % 60 == 0){
 			firePoint.GetComponent<LineRenderer>().SetPosition(0,Vector3.zero);
