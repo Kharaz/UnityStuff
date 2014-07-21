@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\DoorScript.cs" />
+     <Compile Include="Assets\GunComponent.cs" />
+     <Compile Include="Assets\GunMakerManager.cs" />
      <Compile Include="Assets\Scripts\Default Scripts\AudioOffset.cs" />
      <Compile Include="Assets\Scripts\Default Scripts\CaptureNormals.cs" />
      <Compile Include="Assets\Scripts\Default Scripts\Punch.cs" />
