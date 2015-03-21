@@ -7,6 +7,7 @@ public class DoorScript : MonoBehaviour {
 	//this is for a two door type door
 	public Transform Door1;
 	public Transform Door2;
+	SphereCollider Trigger;
 	
 	int min;
 	int max;
@@ -26,13 +27,15 @@ public class DoorScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		//Trigger = this.transform.GetComponent<SphereCollider>();
+		Trigger = this.transform.GetComponent<SphereCollider>();
 		min = 0;
 		max = 2;
 		moving = false;
 		open = false;
-		Door1Open = Door1.position - new Vector3(0,0,1);
-		Door2Open = Door2.position + new Vector3(0,0,1);
+		//Door1Open = Door1.position - new Vector3(0,0,1);
+		//Door2Open = Door2.position + new Vector3(0,0,1);
+		Door1Open = Door1.position - Door1.transform.forward;
+		Door2Open = Door2.position + Door1.transform.forward;
 		Door1Closed = Door1.position;
 		Door2Closed = Door2.position;
 	}
@@ -51,9 +54,13 @@ public class DoorScript : MonoBehaviour {
 		
 		} else if (!open){
 			//t += Time.deltaTime/moveTime;
+			/*
 			Door1.position = Vector3.Lerp(Door1.position, Door1Open + new Vector3(0,0,1), t);
 			Door2.position = Vector3.Lerp(Door2.position, Door2Open - new Vector3(0,0,1), t);
-		
+			*/
+			Door1.position = Vector3.Lerp(Door1.position, Door1Open + Door1.transform.forward, t);
+			Door2.position = Vector3.Lerp(Door2.position, Door2Open - Door1.transform.forward, t);
+			
 		}
 	}
 	

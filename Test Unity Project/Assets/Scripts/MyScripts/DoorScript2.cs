@@ -24,10 +24,12 @@ public class DoorScript2 : MonoBehaviour
 	}
 	
 	public void OnTriggerEnter(){
+		Debug.Log ("Entered trigger");
 		isOpen = true;
 	}
 	
 	public void OnTriggerExit(){
+		Debug.Log ("Exited trigger");
 		isOpen = false;
 	}	
 	
